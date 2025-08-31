@@ -1,0 +1,186 @@
+---
+layout: default
+title: Home
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root { --brand:#375dfb; --accent:#10b981; }
+body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+.container-lg { max-width: 1100px !important; }
+.hero { display:grid; grid-template-columns: .9fr 1.1fr; gap:22px; align-items:center; }
+.hero .photo { width:min(280px, 84%); aspect-ratio:1/1; border-radius:18px; object-fit:cover; border: 2px solid rgba(0,0,0,.06); box-shadow: 0 18px 40px rgba(0,0,0,.12); }
+.chips { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 0; }
+.chip { background:#eef2ff; color:#334155; border:1px solid #e2e8f0; padding:6px 10px; border-radius:999px; font-size:13px; }
+.btn-primary { background: linear-gradient(120deg, var(--brand), var(--accent)); border:none; }
+.metric-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:14px; }
+.metric { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:12px; text-align:center; }
+.metric .num { font-weight:800; font-size:26px; }
+.metric .label { font-size:12px; color:#64748b; }
+/* Visible theme button in both modes */
+#themeToggle { color:#111 !important; background:#fff; border:1px solid #e2e8f0; }
+.dark #themeToggle { color:#fff !important; background:#0f172a; border-color:#334155; }
+.search { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e5e7eb; }
+.timeline::before { content:''; position:absolute; left:9px; top:0; bottom:0; width:2px; background: linear-gradient(#a5b4fc, #34d399); opacity:.4; }
+.job { position: relative; margin: 8px 0 14px 24px; }
+.job::before { content:''; position:absolute; left:-23px; top:6px; width:12px; height:12px; border-radius:50%; background: #6366f1; box-shadow: 0 0 0 4px rgba(99,102,241,.15); }
+.tag { background:#f1f5f9; border:1px solid #e2e8f0; color:#334155; border-radius:8px; padding:2px 8px; font-size:12px; display:inline-block; margin-right:6px; }
+footer.site-footer { text-align:center; color:#64748b; }
+</style>
+
+<div class="container-lg px-3 my-5 markdown-body">
+  <nav style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;">
+    <strong>Sunil Jadhav</strong>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <a class="btn" href="#experience">Experience</a>
+      <a class="btn" href="#skills">Skills</a>
+      <a class="btn" href="#contact">Contact</a>
+      <button id="themeToggle" class="btn">🌗 Theme</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="photo-wrap"><img src="{{ '/assets/img/sunil.jpg' | relative_url }}" alt="Photo of Sunil Jadhav" class="photo"></div>
+    <div>
+      <p class="lead" style="margin:0;color:#64748b;">Associate Director, Documentation | Content Strategy | AI for Docs — Mumbai, India</p>
+      <h1 style="margin-top:4px;">AI‑driven documentation leader who ships clarity, adoption, and measurable impact.</h1>
+      <p style="color:#334155">I use automation and analytics to transform technical writing, cut support costs, and scale teams. Partner to Product, Engineering, and Design across US/UK/EU/Japan.</p>
+      <div class="chips">
+        <span class="chip">AI for Docs</span><span class="chip">API & Developer Docs</span>
+        <span class="chip">Team Leadership</span><span class="chip">OKRs & Performance</span>
+        <span class="chip">Content Strategy</span><span class="chip">Onboarding & Adoption</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <a href="#experience" class="btn btn-primary">View Experience</a>
+        <a href="mailto:write2sunil@gmail.com" class="btn">Email</a>
+        <a href="https://www.linkedin.com/in/sunil-jadhav-76b90a9" target="_blank" class="btn">LinkedIn</a>
+        <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><div id="m-years" class="num">0</div><div class="label">Years in Docs</div></div>
+        <div class="metric"><div id="m-saved" class="num">$0</div><div class="label">Annual Savings</div></div>
+        <div class="metric"><div id="m-tix" class="num">0%</div><div class="label">Ticket Reduction</div></div>
+      </div>
+    </div>
+  </section>
+
+  <hr/>
+
+  <section id="experience">
+    <h2>Experience</h2>
+    <p><input id="search" class="search" placeholder="Search experience (try: AI, OKR, Agile, API)…"></p>
+    <div id="count" style="color:#64748b;margin:6px 0 12px;"></div>
+    <div class="timeline" id="timeline" style="position:relative;"></div>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <ul>
+      <li><strong>AI & automation:</strong> DocOps, style‑guide automation, API ref generation, analytics</li>
+      <li><strong>Leadership:</strong> Team building, OKRs, mentoring, performance frameworks</li>
+      <li><strong>Documentation:</strong> API/SDK docs, release notes, knowledge bases, user guides</li>
+      <li><strong>Tools:</strong> Jira, Confluence, GitHub, Markdown, Grammarly AI</li>
+      <li><strong>Domains:</strong> SaaS B2B, Fintech, Telecom, Media, GIS, Healthcare, Billing, Embedded</li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:your.email@example.com">your.email@example.com</a></li>
+      <li><strong>Phone:</strong> +91-9769379879</li>
+      <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/sunil-jadhav-76b90a9" target="_blank">linkedin.com/in/sunil-jadhav-76b90a9</a></li>
+      <li><strong>Location:</strong> Mumbai, India</li>
+    </ul>
+  </section>
+
+  <footer class="site-footer">
+    <p>© {{ site.time | date: "%Y" }} Sunil Jadhav · Built with Jekyll + Cayman · Dark/Light theming, live search, and print-ready.</p>
+  </footer>
+</div>
+
+<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script>
+// Theme toggle
+(function(){
+  const btn=document.getElementById('themeToggle');
+  const root=document.documentElement;
+  const saved=localStorage.getItem('theme');
+  if(saved==='dark') root.classList.add('dark');
+  if(saved==='light') root.classList.remove('dark');
+  btn.addEventListener('click',()=>{
+    root.classList.toggle('dark');
+    localStorage.setItem('theme', root.classList.contains('dark') ? 'dark':'light');
+  });
+})();
+
+// Metrics animations
+function animateValue(el,start,end,duration,formatter=(v)=>v){
+  const t0=performance.now();
+  function frame(now){
+    const p=Math.min((now-t0)/duration,1);
+    const v=start+(end-start)*p;
+    el.textContent=formatter(p===1?end:v);
+    if(p<1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+animateValue(document.getElementById('m-years'),0,20,900,v=>Math.round(v));
+animateValue(document.getElementById('m-saved'),0,44208,900,v=>'$'+Math.round(v).toLocaleString());
+animateValue(document.getElementById('m-tix'),0,25,900,v=>Math.round(v)+'%');
+
+// Build jobs from data and Lunr index
+const jobs=[
+  {% for j in site.data.jobs %}{
+    "company":"{{ j.company | escape }}",
+    "title":"{{ j.title | escape }}",
+    "period":"{{ j.period | escape }}",
+    "tags":[{% for t in j.tags %}"{{ t | escape }}"{% unless forloop.last %}, {% endunless %}{% endfor %}],
+    "highlights":[{% for h in j.highlights %}"{{ h | escape }}"{% unless forloop.last %}, {% endunless %}{% endfor %}]
+  }{% unless forloop.last %}, {% endunless %}{% endfor %}
+];
+
+const idx=lunr(function(){
+  this.ref('id');
+  this.field('company'); this.field('title'); this.field('period'); this.field('tags'); this.field('highlights');
+  jobs.forEach((j,i)=>this.add({
+    id:i,
+    company:j.company,
+    title:j.title,
+    period:j.period,
+    tags:j.tags.join(' '),
+    highlights:j.highlights.join(' ')
+  }));
+});
+
+function render(list){
+  const el=document.getElementById('timeline'); el.innerHTML='';
+  list.forEach((j,i)=>{
+    const card=document.createElement('article'); card.className='job';
+    card.innerHTML=`
+      <h3><strong>${j.company}</strong> — ${j.title}</h3>
+      <div class="meta" style="color:#64748b;">${j.period}</div>
+      <details ${list.length===jobs.length && i===0 ? 'open' : ''}>
+        <summary><strong>Highlights</strong></summary>
+        <ul style="margin-top:8px;">${j.highlights.map(h=>`<li>${h}</li>`).join('')}</ul>
+      </details>
+      <div style="margin-top:8px;">${j.tags.map(t=>`<span class='tag'>${t}</span>`).join(' ')}</div>
+    `;
+    el.appendChild(card);
+  });
+  document.getElementById('count').textContent = (list.length===jobs.length)
+    ? `Showing all ${jobs.length} roles`
+    : `Showing ${list.length} of ${jobs.length} roles`;
+}
+render(jobs);
+
+document.getElementById('search').addEventListener('input',(e)=>{
+  const q=e.target.value.trim();
+  if(!q) return render(jobs);
+  const res=idx.search(q).map(r=>jobs[r.ref]);
+  render(res);
+});
+</script>
