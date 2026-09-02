@@ -1,5 +1,5 @@
 // Quick Coach v3 – service worker (GitHub Pages–friendly)
-const CACHE = "qc-cache-v5";
+const CACHE = "qc-cache-v7";
 
 const RAW_ASSETS = [
   "./",

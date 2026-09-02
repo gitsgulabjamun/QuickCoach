@@ -96,6 +96,10 @@ const els = {
   statMins: $("#stat-mins"),
   // FX canvas
   fx: $("#fx-canvas"),
+  // net + backup
+  netStatus: $("#net-status"),
+  backupAll: $("#btn-backup-all"),
+  restoreFile: $("#restore-file"),
 };
 
 let currentIndex = -1;
@@ -346,6 +350,41 @@ function importFavs(file) {
   reader.readAsText(file);
 }
 
+// Backup / restore everything (favorites, custom tips, journal, stats, streaks, goal, settings)
+const BACKUP_KEYS = ["qc:favs","qc:custom","qc:stats","qc:goal","qc:done","qc:challenge","qc:journal","qc:theme"];
+function backupAll() {
+  const data = {};
+  BACKUP_KEYS.forEach(k => { const v = localStorage.getItem(k); if(v!==null) data[k]=v; });
+  const blob = new Blob([JSON.stringify({app:"quick-coach", version:2, data},null,2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = "quick-coach-backup.json"; a.click(); URL.revokeObjectURL(a.href);
+  toast("Backup downloaded");
+}
+
+function restoreAll(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      const data = parsed.data || parsed; // tolerate a raw {key:value} dump too
+      if(!data || typeof data!=="object") throw new Error("bad shape");
+      if(!confirm("Restore will overwrite your current favorites, custom tips, journal, stats, streaks, and settings. Continue?")) return;
+      BACKUP_KEYS.forEach(k => { if(k in data) localStorage.setItem(k, data[k]); });
+      toast("Restored — reloading…");
+      setTimeout(()=>location.reload(), 700);
+    } catch(e) { toast("Bad backup file"); }
+  };
+  reader.readAsText(file);
+}
+
+// Online / offline status
+function updateNetStatus() {
+  const online = navigator.onLine;
+  els.netStatus.classList.toggle("online", online);
+  els.netStatus.title = online ? "Online" : "Offline — your data still works, saved locally";
+  els.netStatus.lastChild.textContent = online ? "Online" : "Offline";
+}
+
 function startAutoShuffle() {
   if(autoTimer) clearInterval(autoTimer);
   if(els.autoShuffle.checked) autoTimer = setInterval(showRandom, 30000);
@@ -482,6 +521,11 @@ els.journal.addEventListener('keydown', (e)=>{ if((e.ctrlKey||e.metaKey) && e.ke
   els.cycle.addEventListener("click", ()=>{ const i = Math.floor(Math.random()*palettes.length); applyPalette(palettes[i]); });
   els.tiltToggle.addEventListener("change", ()=>{ els.tiltToggle.checked ? enableTilt() : disableTilt(); });
   els.breakNotify.addEventListener("change", ()=>{ if(els.breakNotify.checked && "Notification" in window) Notification.requestPermission(); });
+  // Backup + net status
+  els.backupAll.addEventListener("click", backupAll);
+  els.restoreFile.addEventListener("change", e => e.target.files[0] && restoreAll(e.target.files[0]));
+  window.addEventListener("online", updateNetStatus);
+  window.addEventListener("offline", updateNetStatus);
   // Keyboard
   window.addEventListener("keydown", (e)=>{
     if(["INPUT","TEXTAREA"].includes(document.activeElement.tagName) && e.key!=="/") return;
@@ -500,12 +544,14 @@ els.journal.addEventListener('keydown', (e)=>{ if((e.ctrlKey||e.metaKey) && e.ke
 
 // Boot
 async function boot(){
+  const isFirstRun = !BACKUP_KEYS.some(k => localStorage.getItem(k)!==null);
   loadTheme(); applyPalette(palettes[0]);
   renderFavs(); renderCustom(); renderChips();
   rebuildPool(); showRandom(true); startAutoShuffle();
   loadGoal(); renderHeatmap(); loadChallenge();
   loadJournal(); renderStats(); resetTimer();
-  wire(); enableTilt();
+  wire(); enableTilt(); updateNetStatus();
+  if(isFirstRun) setTimeout(()=>toast("Welcome! Space for a new tip, T for a focus sprint"), 900);
   if('serviceWorker' in navigator) {
     try {
       const reg = await navigator.serviceWorker.register('./sw.js');

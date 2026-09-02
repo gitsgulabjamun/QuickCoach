@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quick Coach v3 – Flashy Tips</title>
+  <title>Quick Coach v2 – Flashy Tips</title>
   <meta name="theme-color" content="#6366f1">
   <meta name="description" content="Flashy, interactive productivity coach with timers, streaks, confetti, and gradients.">
   <link rel="icon" href="icons/icon-192.png" sizes="192x192">
@@ -27,9 +27,10 @@
     <header class="topbar">
       <div class="brand">
         <svg aria-hidden="true" viewBox="0 0 24 24" class="logo"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3zm0 7.5l9 4.5-9 4.5-9-4.5 9-4.5z"></path></svg>
-        <h1>Quick Coach</h1><span class="badge">v3</span>
+        <h1>Quick Coach</h1><span class="badge">v2</span>
       </div>
       <div class="actions">
+        <span id="net-status" class="status-pill online" title="Online"><span class="dot"></span>Online</span>
         <button id="btn-theme" class="btn icon" title="Toggle theme" aria-label="Toggle theme"><span class="icon-sun"></span></button>
         <button id="btn-cycle" class="btn">Cycle theme</button>
         <button id="btn-install" class="btn" hidden>Install</button>
@@ -44,6 +45,7 @@
             <div class="tip-tags" id="tip-tags"></div>
             <select id="pack" class="select" title="Choose tip pack">
               <option value="all">All tips</option>
+              <option value="general">General</option>
               <option value="focus">Focus / Deep Work</option>
               <option value="writing">Writing</option>
               <option value="energy">Energy</option>
@@ -167,6 +169,15 @@
             <li><strong id="stat-sessions">0</strong><span>focus sessions</span></li>
             <li><strong id="stat-mins">0</strong><span>minutes focused</span></li>
           </ul>
+        </section>
+
+        <section class="panel">
+          <h2>Backup</h2>
+          <p class="small">Everything lives only in this browser. Back it up before clearing site data or switching devices.</p>
+          <div class="row">
+            <button class="btn" id="btn-backup-all">Backup everything</button>
+            <label class="btn file">Restore <input type="file" id="restore-file" accept="application/json" hidden></label>
+          </div>
         </section>
       </section>
     </main>
