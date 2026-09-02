@@ -438,7 +438,7 @@ function completeChallenge(){ let obj=JSON.parse(localStorage.getItem("qc:challe
 let timer=null,totalMs=0,leftMs=0,mode="work",roundsLeft=0;
 function ms(m){ return m*60*1000; }
 function setDisplay(ms){ const s=Math.max(0,Math.floor(ms/1000)); const mm=String(Math.floor(s/60)).padStart(2,"0"); const ss=String(s%60).padStart(2,"0"); els.td.textContent=mm+":"+ss; const pct=Math.max(0,1 - (ms/totalMs||1)); const circumference=339.292; els.ring.style.strokeDashoffset = String(circumference - circumference*pct); }
-function startTimer(){ if(timer) return; const w=+els.tWork.value||25, b=+els.tBreak.value||5, r=+els.tRounds.value||4; if(totalMs===0){ mode="work"; roundsLeft=r; leftMs=totalMs=ms(w); setDisplay(leftMs); } timer=setInterval(()=>{ leftMs-=1000; setDisplay(leftMs); if(leftMs<=0){ clearInterval(timer); timer=null; if(mode==="work"){ stats.sessions++; stats.mins += (+els.tWork.value||25); saveStats(); renderStats(); markDoneToday(); if(els.breakNotify.checked && "Notification" in window && Notification.permission==="granted") new Notification("Break time","Walk, breathe, water."); mode="break"; leftMs=totalMs=ms(b); setDisplay(leftMs); startTimer(); } else { roundsLeft--; if(roundsLeft>0){ if(els.breakNotify.checked && "Notification" in window && Notification.permission==="granted") new Notification("Focus time","Back to work."); mode="work"; leftMs=totalMs=ms(w); setDisplay(leftMs); startTimer(); } else { toast("Session complete"); if(els.fxToggle.checked) burst("confetti"); vibe(30); } } } ,1000); }
+function startTimer(){ if(timer) return; const w=+els.tWork.value||25, b=+els.tBreak.value||5, r=+els.tRounds.value||4; if(totalMs===0){ mode="work"; roundsLeft=r; leftMs=totalMs=ms(w); setDisplay(leftMs); } timer=setInterval(()=>{ leftMs-=1000; setDisplay(leftMs); if(leftMs<=0){ clearInterval(timer); timer=null; if(mode==="work"){ stats.sessions++; stats.mins += (+els.tWork.value||25); saveStats(); renderStats(); markDoneToday(); if(els.breakNotify.checked && "Notification" in window && Notification.permission==="granted") new Notification("Break time","Walk, breathe, water."); mode="break"; leftMs=totalMs=ms(b); setDisplay(leftMs); startTimer(); } else { roundsLeft--; if(roundsLeft>0){ if(els.breakNotify.checked && "Notification" in window && Notification.permission==="granted") new Notification("Focus time","Back to work."); mode="work"; leftMs=totalMs=ms(w); setDisplay(leftMs); startTimer(); } else { totalMs=0; leftMs=0; toast("Session complete"); if(els.fxToggle.checked) burst("confetti"); vibe(30); } } } },1000); }
 function pauseTimer(){ if(timer){ clearInterval(timer); timer=null; } }
 function resetTimer(){ pauseTimer(); totalMs=0; leftMs=0; mode="work"; setDisplay(ms(+els.tWork.value||25)); }
 
@@ -506,6 +506,19 @@ async function boot(){
   loadGoal(); renderHeatmap(); loadChallenge();
   loadJournal(); renderStats(); resetTimer();
   wire(); enableTilt();
-  if('serviceWorker' in navigator) { try { await navigator.serviceWorker.register('./sw.js'); } catch {} }
+  if('serviceWorker' in navigator) {
+    try {
+      const reg = await navigator.serviceWorker.register('./sw.js');
+      reg.addEventListener('updatefound', () => {
+        const sw = reg.installing;
+        if(!sw) return;
+        sw.addEventListener('statechange', () => {
+          if(sw.state === 'installed' && navigator.serviceWorker.controller) {
+            toast('Update ready — refresh to get the latest');
+          }
+        });
+      });
+    } catch {}
+  }
 }
 boot();

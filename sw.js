@@ -1,5 +1,5 @@
 // Quick Coach v3 – service worker (GitHub Pages–friendly)
-const CACHE = "qc-cache-v4";
+const CACHE = "qc-cache-v5";
 
 const RAW_ASSETS = [
   "./",
@@ -15,14 +15,14 @@ const RAW_ASSETS = [
 const ASSETS = RAW_ASSETS.map(p => new URL(p, self.registration.scope).toString());
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(k => (k !== CACHE ? caches.delete(k) : false)))
-    )
+    caches.keys()
+      .then(keys => Promise.all(keys.map(k => (k !== CACHE ? caches.delete(k) : false))))
+      .then(() => self.clients.claim())
   );
 });
 
